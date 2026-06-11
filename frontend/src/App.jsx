@@ -7,6 +7,8 @@ import Courses from './pages/Courses';
 import Dashboard from './pages/Dashboard';
 import Chatbot from './pages/Chatbot';
 import { useAuth } from './context/AuthContext';
+import CourseDetail from './pages/CourseDetail';
+import Quiz from './pages/Quiz';
 
 const ProtectedRoute = ({ children }) => {
   const { user, loading } = useAuth();
@@ -30,6 +32,12 @@ function App() {
         <Route path="/chatbot" element={
           <ProtectedRoute><Chatbot /></ProtectedRoute>
         } />
+        <Route path="/courses/:id" element={
+  <ProtectedRoute><CourseDetail /></ProtectedRoute>
+} />
+<Route path="/quiz/:id" element={
+  <ProtectedRoute><Quiz /></ProtectedRoute>
+} />
       </Routes>
     </div>
   );
