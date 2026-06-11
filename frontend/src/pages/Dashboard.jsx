@@ -74,6 +74,12 @@ const Dashboard = () => {
                 <div className={`text-sm font-semibold ${enrollment.is_completed ? 'text-green-600' : 'text-blue-600'}`}>
                   {enrollment.is_completed ? '✅ Completed' : '📖 In Progress'}
                 </div>
+                <button
+  onClick={() => window.location.href = `/courses/${enrollment.course}`}
+  className="mt-4 w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-2 rounded-lg font-semibold hover:opacity-90"
+>
+  Continue Learning →
+</button>
               </div>
             ))}
           </div>

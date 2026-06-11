@@ -67,12 +67,20 @@ const Courses = () => {
                   <div className="text-sm text-gray-500 mb-4">
                     👨‍🏫 {course.instructor_name} • 📖 {course.total_lessons} lessons
                   </div>
-                  <button
-                    onClick={() => handleEnroll(course.id)}
-                    className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-2 rounded-lg font-semibold hover:opacity-90 transition"
-                  >
-                    Enroll Now
-                  </button>
+                 <div className="flex gap-2">
+  <button
+    onClick={() => handleEnroll(course.id)}
+    className="flex-1 bg-gradient-to-r from-blue-600 to-purple-600 text-white py-2 rounded-lg font-semibold hover:opacity-90 transition"
+  >
+    Enroll
+  </button>
+  <button
+    onClick={() => window.location.href = `/courses/${course.id}`}
+    className="flex-1 bg-gray-200 text-gray-800 py-2 rounded-lg font-semibold hover:bg-gray-300 transition"
+  >
+    View Lessons
+  </button>
+</div>
                 </div>
               </div>
             ))}
