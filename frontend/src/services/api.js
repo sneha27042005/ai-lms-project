@@ -53,4 +53,23 @@ export const getChatSessions = () => api.get('/chatbot/sessions/');
 export const getDashboard = () => api.get('/progress/dashboard/');
 export const markLessonComplete = (lessonId) => api.post(`/progress/lessons/${lessonId}/complete/`);
 
+// Instructor Dashboard APIs
+export const getInstructorDashboard = () => api.get('/instructor/dashboard/');
+
+// Discussion APIs
+export const getDiscussions = (courseId) => api.get(`/courses/${courseId}/discussions/`);
+export const createDiscussion = (courseId, data) => api.post(`/courses/${courseId}/discussions/`, data);
+export const getDiscussionComments = (discussionId) => api.get(`/discussions/${discussionId}/comments/`);
+export const createComment = (discussionId, data) => api.post(`/discussions/${discussionId}/comments/`, data);
+
+// Leaderboard APIs
+export const getLeaderboard = (params = '') => api.get(`/leaderboard/${params}`);
+
+// Achievements APIs
+export const getAchievements = () => api.get('/achievements/');
+
+// Notification Preferences APIs
+export const getNotificationPreference = () => api.get('/notification-preference/');
+export const updateNotificationPreference = (data) => api.put('/notification-preference/', data);
+
 export default api;

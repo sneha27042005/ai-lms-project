@@ -11,6 +11,9 @@ import Quiz from './pages/Quiz';
 import Quizzes from './pages/Quizzes';
 import QuizHistory from './pages/QuizHistory';
 import MyBookmarks from './pages/MyBookmarks';
+import InstructorDashboard from './pages/InstructorDashboard';
+import Leaderboard from './pages/Leaderboard';
+import CourseDiscussions from './pages/CourseDiscussions';
 import { useAuth } from './context/AuthContext';
 
 // Protect routes that need login
@@ -50,8 +53,14 @@ function App() {
         <Route path="/courses/:id" element={
           <ProtectedRoute><CourseDetail /></ProtectedRoute>
         } />
+        <Route path="/courses/:courseId/discussions" element={
+          <ProtectedRoute><CourseDiscussions /></ProtectedRoute>
+        } />
         <Route path="/dashboard" element={
           <ProtectedRoute><Dashboard /></ProtectedRoute>
+        } />
+        <Route path="/instructor-dashboard" element={
+          <ProtectedRoute><InstructorDashboard /></ProtectedRoute>
         } />
         <Route path="/chatbot" element={
           <ProtectedRoute><Chatbot /></ProtectedRoute>
@@ -67,6 +76,9 @@ function App() {
         } />
         <Route path="/my-bookmarks" element={
           <ProtectedRoute><MyBookmarks /></ProtectedRoute>
+        } />
+        <Route path="/leaderboard" element={
+          <ProtectedRoute><Leaderboard /></ProtectedRoute>
         } />
       </Routes>
       

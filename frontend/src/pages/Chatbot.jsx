@@ -1,7 +1,9 @@
 import { useState, useRef, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { sendMessage } from '../services/api';
 
 const Chatbot = () => {
+  const navigate = useNavigate();
   const [messages, setMessages] = useState([
     { role: 'assistant', content: 'Hello! I\'m your AI Tutor. How can I help you learn today?' }
   ]);
@@ -48,11 +50,19 @@ const Chatbot = () => {
       <div className="container mx-auto px-6 max-w-4xl">
         <div className="bg-white rounded-2xl shadow-2xl overflow-hidden">
           {/* Header */}
-          <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-6">
-            <h1 className="text-2xl font-bold flex items-center gap-2">
-              🤖 AI Tutor
-            </h1>
-            <p className="text-blue-100">Powered by Gemini AI</p>
+          <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-6 flex justify-between items-center">
+            <div>
+              <h1 className="text-2xl font-bold flex items-center gap-2">
+                🤖 AI Tutor
+              </h1>
+              <p className="text-blue-100">Powered by Gemini AI</p>
+            </div>
+            <button
+              onClick={() => navigate('/dashboard')}
+              className="bg-white/20 hover:bg-white/30 text-white px-4 py-2 rounded-lg font-semibold transition flex items-center gap-2"
+            >
+              ← Go Back
+            </button>
           </div>
 
           {/* Messages */}

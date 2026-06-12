@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { getDashboard, getMyCourses } from '../services/api';
 import { useAuth } from '../context/AuthContext';
+import StudentAchievements from '../components/StudentAchievements';
 
 const Dashboard = () => {
   const [stats, setStats] = useState(null);
@@ -27,13 +28,13 @@ const Dashboard = () => {
     }
   };
 
-  if (loading) return <div className="text-center py-20">Loading...</div>;
+  if (loading) return <div className="text-center py-20 text-white">Loading...</div>;
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-800 py-12">
       <div className="container mx-auto px-6">
-        <h1 className="text-4xl font-bold text-gray-800 mb-2">Welcome back, {user?.username}! 👋</h1>
-        <p className="text-gray-600 mb-8">Here's your learning overview</p>
+        <h1 className="text-4xl font-bold text-white mb-2">Welcome back, {user?.username}! 👋</h1>
+        <p className="text-slate-300 mb-8">Here's your learning overview</p>
 
         {/* Stats */}
         <div className="grid md:grid-cols-4 gap-6 mb-12">
@@ -59,27 +60,32 @@ const Dashboard = () => {
           </div>
         </div>
 
+        {/* Achievements Section */}
+        <div className="bg-slate-700/50 rounded-lg p-8 border border-slate-600 mb-12">
+          <StudentAchievements />
+        </div>
+
         {/* My Courses */}
-        <h2 className="text-2xl font-bold text-gray-800 mb-6">My Enrolled Courses</h2>
+        <h2 className="text-2xl font-bold text-white mb-6">My Enrolled Courses</h2>
         {myCourses.length === 0 ? (
-          <p className="text-gray-600">You haven't enrolled in any courses yet.</p>
+          <p className="text-slate-300">You haven't enrolled in any courses yet.</p>
         ) : (
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {myCourses.map((enrollment) => (
-              <div key={enrollment.id} className="bg-white rounded-2xl shadow-lg p-6">
-                <h3 className="text-xl font-bold text-gray-800 mb-2">{enrollment.course_title}</h3>
-                <p className="text-sm text-gray-500 mb-4">
+              <div key={enrollment.id} className="bg-slate-700/50 border border-slate-600 rounded-2xl p-6 hover:border-blue-500 transition">
+                <h3 className="text-xl font-bold text-white mb-2">{enrollment.course_title}</h3>
+                <p className="text-sm text-slate-400 mb-4">
                   Enrolled: {new Date(enrollment.enrolled_at).toLocaleDateString()}
                 </p>
-                <div className={`text-sm font-semibold ${enrollment.is_completed ? 'text-green-600' : 'text-blue-600'}`}>
+                <div className={`text-sm font-semibold ${enrollment.is_completed ? 'text-green-400' : 'text-blue-400'}`}>
                   {enrollment.is_completed ? '✅ Completed' : '📖 In Progress'}
                 </div>
                 <button
-  onClick={() => window.location.href = `/courses/${enrollment.course}`}
-  className="mt-4 w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-2 rounded-lg font-semibold hover:opacity-90"
->
-  Continue Learning →
-</button>
+                  onClick={() => window.location.href = `/courses/${enrollment.course}`}
+                  className="mt-4 w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-2 rounded-lg font-semibold hover:opacity-90 transition"
+                >
+                  Continue Learning →
+                </button>
               </div>
             ))}
           </div>
