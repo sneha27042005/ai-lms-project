@@ -8,8 +8,10 @@ import CourseDetail from './pages/CourseDetail';
 import Dashboard from './pages/Dashboard';
 import Chatbot from './pages/Chatbot';
 import Quiz from './pages/Quiz';
-import { useAuth } from './context/AuthContext';
 import Quizzes from './pages/Quizzes';
+import QuizHistory from './pages/QuizHistory';
+import MyBookmarks from './pages/MyBookmarks';
+import { useAuth } from './context/AuthContext';
 
 // Protect routes that need login
 const ProtectedRoute = ({ children }) => {
@@ -58,8 +60,14 @@ function App() {
           <ProtectedRoute><Quiz /></ProtectedRoute>
         } />
         <Route path="/quizzes" element={
-  <ProtectedRoute><Quizzes /></ProtectedRoute>
-} />
+          <ProtectedRoute><Quizzes /></ProtectedRoute>
+        } />
+        <Route path="/quiz-history" element={
+          <ProtectedRoute><QuizHistory /></ProtectedRoute>
+        } />
+        <Route path="/my-bookmarks" element={
+          <ProtectedRoute><MyBookmarks /></ProtectedRoute>
+        } />
       </Routes>
       
     </div>

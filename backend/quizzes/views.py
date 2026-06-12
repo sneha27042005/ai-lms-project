@@ -2,10 +2,11 @@ from rest_framework import generics, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, AllowAny
-from .models import Quiz, Question, QuizAttempt
+from django.shortcuts import get_object_or_404
+from .models import Quiz, Question, QuizAttempt, QuestionAttemptDetail, BookmarkedQuestion
 from .serializers import (
-    QuizSerializer, QuestionSerializer,
-    QuizAttemptSerializer, SubmitQuizSerializer
+    QuizSerializer, QuestionSerializer, QuestionDetailSerializer,
+    QuizAttemptSerializer, SubmitQuizSerializer, BookmarkedQuestionSerializer
 )
 
 
@@ -69,30 +70,53 @@ class SubmitQuizView(APIView):
         score = 0
 
         results = []
+        
+        # Create quiz attempt
+        attempt = QuizAttempt.objects.create(
+            student=request.user,
+            quiz=quiz,
+            score=0,
+            total_questions=total_questions,
+            percentage=0,
+            is_passed=False
+        )
+
         for question in questions:
             selected = answers.get(str(question.id), '').upper()
             is_correct = selected == question.correct_option
             if is_correct:
                 score += 1
-            results.append({
+            
+            # Record individual question attempt
+            QuestionAttemptDetail.objects.create(
+                attempt=attempt,
+                question=question,
+                selected_answer=selected if selected else '',
+                is_correct=is_correct
+            )
+            
+            result = {
                 'question_id': question.id,
                 'question': question.text,
                 'selected': selected,
                 'correct': question.correct_option,
-                'is_correct': is_correct
-            })
+                'is_correct': is_correct,
+            }
+            
+            # Include explanation if quiz shows answers
+            if quiz.show_answers_after:
+                result['explanation'] = question.explanation
+            
+            results.append(result)
 
         percentage = (score / total_questions * 100) if total_questions > 0 else 0
         is_passed = percentage >= quiz.passing_score
 
-        attempt = QuizAttempt.objects.create(
-            student=request.user,
-            quiz=quiz,
-            score=score,
-            total_questions=total_questions,
-            percentage=percentage,
-            is_passed=is_passed
-        )
+        # Update attempt with final scores
+        attempt.score = score
+        attempt.percentage = percentage
+        attempt.is_passed = is_passed
+        attempt.save()
 
         return Response({
             'message': 'Quiz submitted successfully',
@@ -101,6 +125,7 @@ class SubmitQuizView(APIView):
             'percentage': round(percentage, 2),
             'is_passed': is_passed,
             'passing_score': quiz.passing_score,
+            'show_answers': quiz.show_answers_after,
             'results': results
         }, status=status.HTTP_200_OK)
 
@@ -111,3 +136,46 @@ class MyAttemptsView(generics.ListAPIView):
 
     def get_queryset(self):
         return QuizAttempt.objects.filter(student=self.request.user)
+
+
+class BookmarkQuestionView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, question_id):
+        question = get_object_or_404(Question, id=question_id)
+        bookmark, created = BookmarkedQuestion.objects.get_or_create(
+            student=request.user,
+            question=question
+        )
+        return Response({
+            'message': 'Question bookmarked' if created else 'Already bookmarked',
+            'bookmarked': True
+        }, status=status.HTTP_201_CREATED if created else status.HTTP_200_OK)
+
+    def delete(self, request, question_id):
+        question = get_object_or_404(Question, id=question_id)
+        BookmarkedQuestion.objects.filter(
+            student=request.user,
+            question=question
+        ).delete()
+        return Response({
+            'message': 'Bookmark removed',
+            'bookmarked': False
+        }, status=status.HTTP_200_OK)
+
+
+class MyBookmarkedQuestionsView(generics.ListAPIView):
+    serializer_class = BookmarkedQuestionSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return BookmarkedQuestion.objects.filter(student=self.request.user)
+
+
+class AttemptDetailView(generics.RetrieveAPIView):
+    serializer_class = QuizAttemptSerializer
+    permission_classes = [IsAuthenticated]
+    
+    def get_object(self):
+        attempt_id = self.kwargs['attempt_id']
+        return get_object_or_404(QuizAttempt, id=attempt_id, student=self.request.user)

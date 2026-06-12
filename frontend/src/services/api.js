@@ -35,6 +35,11 @@ export const createLesson = (courseId, data) => api.post(`/courses/${courseId}/l
 export const getQuizzes = () => api.get('/quizzes/');
 export const getQuiz = (id) => api.get(`/quizzes/${id}/`);
 export const submitQuiz = (id, answers) => api.post(`/quizzes/${id}/submit/`, { answers });
+export const getMyAttempts = () => api.get('/quizzes/my-attempts/');
+export const getAttemptDetail = (attemptId) => api.get(`/quizzes/attempts/${attemptId}/`);
+export const bookmarkQuestion = (questionId) => api.post(`/quizzes/questions/${questionId}/bookmark/`);
+export const removeBookmark = (questionId) => api.delete(`/quizzes/questions/${questionId}/bookmark/`);
+export const getMyBookmarks = () => api.get('/quizzes/my-bookmarks/');
 
 // Chatbot APIs
 export const sendMessage = (message, sessionId = null) => {
@@ -47,7 +52,5 @@ export const getChatSessions = () => api.get('/chatbot/sessions/');
 // Progress APIs
 export const getDashboard = () => api.get('/progress/dashboard/');
 export const markLessonComplete = (lessonId) => api.post(`/progress/lessons/${lessonId}/complete/`);
-
-
 
 export default api;
