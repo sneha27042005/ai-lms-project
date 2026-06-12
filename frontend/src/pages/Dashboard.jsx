@@ -31,7 +31,7 @@ const Dashboard = () => {
   if (loading) return <div className="text-center py-20 text-white">Loading...</div>;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-800 py-12">
+   <div className="min-h-screen bg-gray-100 py-12">
       <div className="container mx-auto px-6">
         <h1 className="text-4xl font-bold text-white mb-2">Welcome back, {user?.username}! 👋</h1>
         <p className="text-slate-300 mb-8">Here's your learning overview</p>
